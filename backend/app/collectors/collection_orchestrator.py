@@ -63,8 +63,16 @@ class CollectionOrchestrator:
             # =========================================================
             # PATH 1: SEC EDGAR (US Companies & Registered Cross-Listings)
             # =========================================================
-            if "SEC EDGAR" in sources and company.cik:
-                sources_queried.append("SEC EDGAR")
+            if "SEC EDGAR" in sources:
+                if not company.cik:
+                    resolved_cik = SecEdgarConnector.resolve_ticker_to_cik(company.ticker)
+                    if resolved_cik:
+                        company.cik = resolved_cik
+                        db.commit()
+                        logs.append(f"Auto-resolved SEC CIK {resolved_cik} for {company.ticker}")
+
+                if company.cik:
+                    sources_queried.append("SEC EDGAR")
                 logs.append(f"Querying official SEC EDGAR XBRL facts for CIK: {company.cik}")
                 try:
                     sec_financials = SecEdgarConnector.extract_annual_financials(company.cik, target_years=fiscal_years)
