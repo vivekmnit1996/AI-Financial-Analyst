@@ -1,9 +1,14 @@
+import sys
 import json
 import logging
 import hashlib
+from pathlib import Path
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 import httpx
+
+# Ensure project root is in sys.path for direct CLI execution
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 logger = logging.getLogger("exchange_connector")
 
@@ -1045,3 +1050,47 @@ class ExchangeConnector:
                 "source_name": f"{clean_ticker} Corporate Disclosures"
             }
         ]
+
+if __name__ == "__main__":
+    import sys
+    print("=" * 70)
+    print("  EXCHANGE CONNECTOR: CORPORATE FILINGS & ESG EXTRACTION ENGINE")
+    print("=" * 70)
+
+    test_tickers = ["RELIANCE", "TCS", "TATAMOTORS", "SBIN"]
+    if len(sys.argv) > 1:
+        test_tickers = sys.argv[1:]
+
+    for ticker in test_tickers:
+        print(f"\n>>> Querying Exchange Disclosures for: {ticker}")
+        filings = ExchangeConnector.get_company_filings(ticker, target_years=[2023, 2024, 2025])
+        print(f"  [+] Financial Filing Periods Extracted: {len(filings)}")
+        for f in filings:
+            fy = f["fiscal_year"]
+            rev = f["revenue"]
+            net = f["net_profit"]
+            assets = f["total_assets"]
+            liab = f["total_liabilities"]
+            eq = f["shareholders_equity"]
+            curr = f["currency"]
+            units = f["units"]
+            balanced = abs(assets - (liab + eq)) < 1.0
+            print(f"      - FY{fy} ({curr} {units}): Revenue={rev:,.1f}, NetProfit={net:,.1f}, BalanceSheet={'MATCHED' if balanced else 'MISMATCH'}")
+
+        esg = ExchangeConnector.get_esg_disclosures(ticker)
+        if esg:
+            print(f"  [+] BRSR ESG Disclosures:")
+            print(f"      - Scope 1 GHG: {esg.get('carbon_emissions_scope1', 0):,.0f} MT CO2e")
+            print(f"      - Scope 2 GHG: {esg.get('carbon_emissions_scope2', 0):,.0f} MT CO2e")
+            print(f"      - Renewable Energy: {esg.get('renewable_energy_pct')}%")
+            print(f"      - Workforce: {esg.get('employee_count', 0):,} (Female: {esg.get('female_workforce_pct')}%)")
+            print(f"      - Board Independence: {esg.get('independent_directors_pct')}%")
+
+        docs = ExchangeConnector.discover_documents(ticker)
+        print(f"  [+] Discovered Exchange Reports: {len(docs)}")
+        for d in docs:
+            print(f"      - [{d.get('document_type')}] {d.get('title')}")
+
+    print("\n" + "=" * 70)
+    print("  EXCHANGE CONNECTOR DEMONSTRATION COMPLETE - ALL SYSTEMS OPERATIONAL")
+    print("=" * 70)

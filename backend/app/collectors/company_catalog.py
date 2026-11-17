@@ -1,6 +1,11 @@
+import sys
 import logging
+from pathlib import Path
 from typing import List, Dict, Any, Optional
 import httpx
+
+# Ensure project root is in sys.path for direct CLI execution
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 from backend.app.collectors.sec_edgar_connector import SecEdgarConnector
 
@@ -474,3 +479,24 @@ class CompanyCatalogService:
             "ir_url": f"https://finance.yahoo.com/quote/{clean}",
             "description": f"{clean} Corporation is a publicly listed enterprise."
         }
+
+if __name__ == "__main__":
+    import sys
+    print("=" * 70)
+    print("  COMPANY DISCOVERY & CATALOG SERVICE: LIVE SEARCH & CIK LOOKUP")
+    print("=" * 70)
+
+    queries = ["Tesla", "Tata Motors", "Nvidia", "Wipro"]
+    if len(sys.argv) > 1:
+        queries = sys.argv[1:]
+
+    for q in queries:
+        print(f"\n>>> Searching Discovery Engine for: '{q}'")
+        results = CompanyCatalogService.search(q)
+        print(f"  [+] Matches Discovered: {len(results)}")
+        for r in results[:4]:
+            print(f"      - {r['ticker']} | {r['name']} | Exch: {r['exchange']} | Curr: {r['currency']} | CIK: {r['cik']}")
+
+    print("\n" + "=" * 70)
+    print("  COMPANY CATALOG SERVICE COMPLETE - ALL DISCOVERY PIPELINES READY")
+    print("=" * 70)

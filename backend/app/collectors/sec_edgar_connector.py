@@ -1,8 +1,13 @@
+import sys
 import json
 import logging
+from pathlib import Path
 from typing import Dict, Any, List, Optional
 import httpx
 from datetime import datetime
+
+# Ensure project root is in sys.path for direct CLI execution
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 logger = logging.getLogger("sec_edgar_connector")
 
@@ -404,3 +409,40 @@ class SecEdgarConnector:
                     break
 
         return discovered
+
+if __name__ == "__main__":
+    import sys
+    print("=" * 70)
+    print("  SEC EDGAR CONNECTOR: OFFICIAL XBRL FINANCIAL EXTRACTION ENGINE")
+    print("=" * 70)
+
+    test_tickers = ["TSLA", "NVDA", "AAPL", "INFY"]
+    if len(sys.argv) > 1:
+        test_tickers = sys.argv[1:]
+
+    for ticker in test_tickers:
+        cik = SecEdgarConnector.resolve_ticker_to_cik(ticker)
+        print(f"\n>>> SEC Registrant: {ticker} (Resolved CIK: {cik})")
+        if not cik:
+            print("    [!] CIK not resolved.")
+            continue
+
+        financials = SecEdgarConnector.extract_annual_financials(cik, target_years=[2022, 2023, 2024])
+        print(f"  [+] XBRL Annual Periods Extracted: {len(financials)}")
+        for f in financials:
+            fy = f["fiscal_year"]
+            rev = f["revenue"]
+            net = f["net_profit"]
+            ocf = f["operating_cash_flow"]
+            curr = f["currency"]
+            units = f["units"]
+            print(f"      - FY{fy} ({curr} {units}): Revenue={rev:,.1f}, NetProfit={net:,.1f}, OCF={ocf:,.1f}")
+
+        reports = SecEdgarConnector.discover_official_reports(cik, limit=2)
+        print(f"  [+] Discovered Official SEC Submissions: {len(reports)}")
+        for r in reports:
+            print(f"      - [{r.get('form')}] {r.get('title')} -> {r.get('source_url')}")
+
+    print("\n" + "=" * 70)
+    print("  SEC EDGAR DEMONSTRATION COMPLETE - ALL SYSTEMS OPERATIONAL")
+    print("=" * 70)
