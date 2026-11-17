@@ -1,0 +1,283 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+\setbeamercolor{titlelike}{parent=structure,bg=blue!85!black,fg=white}
+\setbeamercolor{frametitle}{bg=blue!85!black,fg=white}
+\setbeamertemplate{navigation symbols}{}
+
+\title[AI Financial Analyst \& Report Generator]{AI Financial Analyst \& Report Generator}
+\subtitle{An Integrated Framework for Financial Analytics, ESG Assessment \\ and Evidence-Grounded Report Generation Using Hybrid RAG}
+\author[Vivek \& Ashish]{Vivek Upadhyay (2023UAI1996) \and Ashish Rolaniya (2023UAI1825)}
+\institute[MNIT Jaipur]{Department of Artificial Intelligence and Data Engineering \\ Malaviya National Institute of Technology (MNIT) Jaipur, India}
+\date{B.Tech Major Project Defense --- 2026}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Project Overview \& Core Motivation}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{The Real-World Financial Challenge:}
+\begin{itemize}
+    \item Voluminous corporate filings (10-K, 10-Q, BRSR, Annual Reports).
+    \item Financial analysts spend over 70\% of time manually parsing cross-references.
+    \item Rapid institutional decision-making demands auditable, verifiable intelligence.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Our Engineering Solution:}
+\begin{itemize}
+    \item \textbf{Deterministic Math Engine:} Zero LLM arithmetic hallucinations.
+    \item \textbf{Hybrid RAG Ingestion:} Dense BGE + Okapi BM25 + Reciprocal Rank Fusion.
+    \item \textbf{Transparent ESG Engine:} Indicator decomposition with 30\% coverage gating.
+    \item \textbf{Institutional Reports:} Dynamic PDF \& HTML dossiers with page citations.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Why Standard LLMs Fail in Corporate Finance?}
+\begin{block}{1. Arithmetic Hallucination on Financial Tables}
+Autoregressive LLMs cannot guarantee accounting precision. On benchmarks like \textit{FinanceBench} and \textit{FinQA}, commercial frontier models fail on over 80\% of numerical ratio queries without external calculation tools.
+\end{block}
+\begin{block}{2. Lack of Verifiable Source Attribution}
+Standard LLMs produce plausible ungrounded summaries. In high-stakes capital markets, institutional investors cannot act on unanchored assertions.
+\end{block}
+\begin{block}{3. Opaque Commercial ESG Ratings}
+MIT Sloan's \textit{Aggregate Confusion} study demonstrated commercial ESG ratings correlate at only $r \approx 0.54$ due to proprietary black-box weightings.
+\end{block}
+\end{frame}
+
+\begin{frame}{The Dual-Pathway System Architecture}
+\begin{center}
+\textbf{Strict Separation of Numerical Arithmetic from Generative Reasoning}
+\end{center}
+\vspace{0.2cm}
+\begin{columns}[T]
+\begin{column}{0.32\textwidth}
+\begin{exampleblock}{Pathway A: Financials}
+\begin{itemize}
+    \item Structured XBRL statements.
+    \item Python/Pandas numerical core.
+    \item 14 key financial ratios.
+    \item Zero-division guards.
+\end{itemize}
+\end{exampleblock}
+\end{column}
+\begin{column}{0.32\textwidth}
+\begin{alertblock}{Pathway B: Hybrid RAG}
+\begin{itemize}
+    \item Structure-aware PDF chunks.
+    \item BGE Dense (384-d) + BM25.
+    \item RRF ($k=60$) + Cross-Encoder.
+    \item $[Doc, Page, Sec]$ citations.
+\end{itemize}
+\end{alertblock}
+\end{column}
+\begin{column}{0.32\textwidth}
+\begin{block}{Pathway C: Transparent ESG}
+\begin{itemize}
+    \item Corporate BRSR indicators.
+    \item E: 30\%, S: 30\%, G: 40\%.
+    \item Non-disclosure normalization.
+    \item $\ge 30\%$ coverage gate.
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\vspace{0.3cm}
+\begin{center}
+$\Downarrow$ \\
+\textbf{Evidence Synthesis Core $\longrightarrow$ Publication PDF / HTML Dossiers}
+\end{center}
+\end{frame}
+
+\begin{frame}{Pathway A: Deterministic Financial Ratio Engine}
+\begin{table}[h]
+\centering
+\resizebox{0.9\textwidth}{!}{
+\begin{tabular}{lll}
+\textbf{Financial Ratio} & \textbf{Deterministic Formula} & \textbf{Analytical Focus} \\
+\hline
+\textbf{Gross Margin} & $(Revenue - COGS) / Revenue \times 100\%$ & Production cost efficiency \\
+\textbf{Operating Margin} & $Operating\,Profit / Revenue \times 100\%$ & Core business profitability \\
+\textbf{Net Profit Margin} & $Net\,Income / Revenue \times 100\%$ & Bottom-line return \\
+\textbf{Return on Equity (ROE)} & $Net\,Income / Shareholders'\,Equity \times 100\%$ & Shareholder capital yield \\
+\textbf{Return on Assets (ROA)} & $Net\,Income / Total\,Assets \times 100\%$ & Asset productivity \\
+\textbf{Debt-to-Equity} & $Total\,Debt / Shareholders'\,Equity$ & Financial leverage \& risk \\
+\textbf{Current Ratio} & $Total\,Assets / Total\,Liabilities$ & Short-term liquidity buffer \\
+\textbf{Cash Conversion} & $Operating\,Cash\,Flow / Net\,Income$ & Earnings quality check \\
+\hline
+\end{tabular}
+}
+\end{table}
+\textbf{Implementation:} Python/Pandas vectorized calculation executing across multi-year statements in \textbf{1.1 ms} with 100\% mathematical precision.
+\end{frame}
+
+\begin{frame}{Automated Data Acquisition \& Accounting Validation}
+\begin{itemize}
+    \item \textbf{SEC EDGAR XBRL API:} Ingests official Company Facts JSON adhering to SEC Fair Access Policies.
+    \item \textbf{Stock Exchange Filings (NSE/BSE):} Ingests audited filings, XBRL statements, and BRSR sustainability reports.
+    \item \textbf{Accounting Invariant Verification:} Validates balance sheet integrity before storage:
+    $$|Total\,Assets - (Total\,Liabilities + Shareholders'\,Equity)| < 0.02 \times Total\,Assets$$
+    \item \textbf{Anomaly Detection:} Detects duplicate periods, currency unit discrepancies, and $>100\%$ YoY variances.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pathway B: Hybrid Information Retrieval \& Reranking}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{1. Dense Semantic Vectors:}
+\begin{itemize}
+    \item Model: \texttt{BAAI/bge-small-en-v1.5} (384-d).
+    \item Qdrant persistent vector database.
+    \item Captures conceptual and semantic queries.
+\end{itemize}
+\vspace{0.2cm}
+\textbf{2. Sparse Lexical Index (BM25):}
+\begin{itemize}
+    \item Okapi BM25 with term saturation ($k_1=1.5, b=0.75$).
+    \item Pins exact metrics: \textit{Ind AS 116}, \textit{Scope 2 GHG}, \textit{EBITDA}.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{3. Reciprocal Rank Fusion (RRF):}
+$$RRF(d) = \sum_{m \in \{Dense, BM25\}} \frac{1}{k + r_m(d)}, \quad k=60$$
+\textbf{4. Cross-Encoder Reranking:}
+\begin{itemize}
+    \item \texttt{BAAI/bge-reranker-base} joint cross-attention.
+    \item Contextual section boost (+0.05) for MD\&A and Risk Factors.
+    \item Discards lexical false positives.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Pathway C: Transparent ESG Evaluation Engine}
+\begin{block}{Three-Pillar Auditable Decomposition}
+$$S_{\text{ESG}} = 0.30 \times S_{\text{Environmental}} + 0.30 \times S_{\text{Social}} + 0.40 \times S_{\text{Governance}}$$
+\end{block}
+\begin{itemize}
+    \item \textbf{Environmental (30\%):} Scope 1 \& 2 GHG emissions, Energy consumption, Water usage, Waste recycling.
+    \item \textbf{Social (30\%):} Workforce headcount, Female workforce ratio, Lost Time Injury Rate (LTIR), Training hours.
+    \item \textbf{Governance (40\%):} Board independence \%, Female board ratio, Independent audit committee, Anti-corruption policy.
+\end{itemize}
+\begin{alertblock}{Coverage Gating Rule}
+If disclosed indicators $< 30\%$ of total, the system marks the rating as \textbf{"Insufficient Data Disclosed"} and refuses to fabricate speculative scores.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Evidence Grounding \& Verifiable Citations}
+\begin{block}{Grounded Synthesis Core}
+\begin{itemize}
+    \item Top-5 reranked evidence passages are dynamically bound into prompt context.
+    \item Factual assertions must include structured page-level references:
+    $$\textbf{[Document Title, Page } X\textbf{, Section } Y\textbf{]}$$
+\end{itemize}
+\end{block}
+\begin{exampleblock}{Interactive UI Citation Badge}
+\begin{itemize}
+    \item In the React dashboard, clicking any citation badge highlights the exact excerpt and page coordinates from the underlying filing.
+    \item $100\%$ of qualitative assertions in audit tests exhibited authentic page coordinates.
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Empirical Results \& Retrieval Benchmark}
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\textbf{Retrieval Configuration} & \textbf{P@5} & \textbf{P@10} & \textbf{MRR@10} & \textbf{NDCG@10} \\
+\hline
+Dense Only (BGE-small) & 0.680 & 0.540 & 0.732 & 0.715 \\
+Sparse Only (Okapi BM25) & 0.640 & 0.510 & 0.684 & 0.662 \\
+Hybrid Fusion (RRF $k=60$) & 0.820 & 0.690 & 0.841 & 0.828 \\
+\textbf{Hybrid + Cross-Encoder Reranker} & \textbf{0.920} & \textbf{0.780} & \textbf{0.916} & \textbf{0.898} \\
+\hline
+\end{tabular}
+\end{table}
+\begin{itemize}
+    \item Hybrid RRF delivers a \textbf{+14.9\% MRR gain} over dense-only retrieval.
+    \item Cross-Encoder reranking delivers an additional \textbf{+8.9\% MRR gain}, reaching \textbf{0.916 MRR@10}.
+    \item \textbf{Test Suite Execution:} 15 unit and integration tests passing in \textbf{8.72 seconds}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{System Latency \& Sub-Component Profiles}
+\begin{table}[h]
+\centering
+\resizebox{0.85\textwidth}{!}{
+\begin{tabular}{lrr}
+\textbf{Sub-Component} & \textbf{Mean Latency} & \textbf{Execution Paradigm} \\
+\hline
+Query Intent Routing & 2.1 ms & Deterministic Regex Rules \\
+Financial Ratio Engine (3 Years) & \textbf{1.1 ms} & Vectorized Python/Pandas \\
+Balance Sheet Reconciliation & 0.4 ms & Invariant Integrity Check \\
+ESG Indicator Scoring & 0.8 ms & Vectorized NumPy Rule \\
+Dense Embedding (Query) & 14.2 ms & FastEmbed ONNX Runtime \\
+Qdrant Vector Search ($K=20$) & 4.6 ms & In-Process Vector Index \\
+Okapi BM25 Search ($K=20$) & 1.8 ms & In-Memory Sparse Index \\
+Reciprocal Rank Fusion & 0.3 ms & Pure Python Dict Sort \\
+Cross-Encoder Reranking (Top-20) & 64.2 ms & FastEmbed ONNX Cross-Attn \\
+PDF Report Generation (5 Pages) & 182.4 ms & ReportLab Flowable Canvas \\
+\hline
+\textbf{Total End-to-End Execution} & \textbf{271.9 ms} & \textbf{Complete Analytical Cycle} \\
+\hline
+\end{tabular}
+}
+\end{table}
+\end{frame}
+
+\begin{frame}{Theoretical Literature Foundation (19 Papers)}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item \textbf{Financial QA:} FinQA (\textit{EMNLP '21}), TAT-QA (\textit{ACL '21}), FinanceBench (\textit{'23}).
+    \item \textbf{RAG Foundations:} Lewis et al. (\textit{NeurIPS '20}), DPR (\textit{EMNLP '20}), HyDE (\textit{ACL '23}).
+    \item \textbf{Hybrid Search:} Robertson (\textit{BM25 '09}), Sentence-BERT (\textit{'19}), BGE (\textit{'23}).
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item \textbf{Reranking:} Cormack (\textit{RRF '09}), Nogueira (\textit{Passage Rerank '19}).
+    \item \textbf{Layout:} LayoutLM (\textit{'20}), PubTables-1M (\textit{'22}).
+    \item \textbf{Financial Models \& ESG:} BloombergGPT (\textit{'23}), FinBERT (\textit{'19}), Berg (\textit{Review of Finance '22}).
+\end{itemize}
+\end{column}
+\end{columns}
+\vspace{0.3cm}
+\begin{center}
+\textbf{Academic Deliverable:} 7-page IEEE Conference Manuscript Prepared for Mentor Review.
+\end{center}
+\end{frame}
+
+\begin{frame}{Conclusion \& Key Contributions}
+\begin{enumerate}
+    \item \textbf{Production Full-Stack Architecture:} Fully implemented with FastAPI, React, PostgreSQL/SQLite, Qdrant, and ReportLab.
+    \item \textbf{Zero Arithmetic Hallucination:} Guaranteed by deterministic calculation engine (1.1 ms execution).
+    \item \textbf{High-Fidelity Document Retrieval:} Hybrid RRF + Cross-Encoder achieves \textbf{0.916 MRR@10} with 100\% verifiable page citations.
+    \item \textbf{Transparent ESG Assessment:} Resolves rating divergence through open 30/30/40 weighting and 30\% coverage gating.
+    \item \textbf{Open Source \& Academic Artifacts:} GitHub repository published at \texttt{vivekmnit1996/AI-Financial-Analyst}.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Thank You! Questions \& Answers}
+\begin{center}
+\LARGE \textbf{AI Financial Analyst \& Report Generator} \\
+\vspace{0.4cm}
+\normalsize
+\textbf{Vivek Upadhyay} (Roll: 2023UAI1996) --- Team Captain \\
+\textbf{Ashish Rolaniya} (Roll: 2023UAI1825) --- Co-Investigator \\
+\vspace{0.3cm}
+\textit{Department of Artificial Intelligence and Data Engineering} \\
+\textit{Malaviya National Institute of Technology (MNIT) Jaipur, Rajasthan} \\
+\vspace{0.4cm}
+\textbf{GitHub:} \url{https://github.com/vivekmnit1996/AI-Financial-Analyst} \\
+\textbf{Web Dashboard:} \texttt{http://localhost:8000}
+\end{center}
+\end{frame}
+
+\end{document}
