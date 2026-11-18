@@ -92,6 +92,13 @@ def query_ai_analyst(payload: QueryRequest, db: Session = Depends(get_db)):
         enable_reranking=payload.enable_reranking
     )
 
+    # Reconcile retrieved evidence snippets with authoritative relational DB chunks
+    if all_chunks:
+        chunk_content_map = {c.chunk_id: c.content for c in all_chunks}
+        for item in retrieved_evidence:
+            if item.get("chunk_id") in chunk_content_map:
+                item["content"] = chunk_content_map[item["chunk_id"]]
+
     # 4. Generate grounded answer
     response = LLMService.answer_query(
         query=payload.query,

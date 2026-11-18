@@ -53,10 +53,24 @@ class SampleDocumentGenerator:
             return str(output_path)
 
         # Inspect dynamic financial data if already collected for this company
+        fin_list = []
+        if hasattr(company, "financials") and company.financials:
+            fin_list = list(company.financials)
+        elif hasattr(company, "financial_data") and company.financial_data:
+            fin_list = list(company.financial_data)
+        elif hasattr(company, "id") and company.id:
+            try:
+                from backend.app.database import SessionLocal
+                from backend.app.models.schema_models import FinancialData
+                with SessionLocal() as session:
+                    fin_list = session.query(FinancialData).filter(FinancialData.company_id == company.id).all()
+            except Exception:
+                fin_list = []
+
         fin_2024 = None
         fin_2023 = None
-        if hasattr(company, "financial_data") and company.financial_data:
-            sorted_fin = sorted(company.financial_data, key=lambda f: f.fiscal_year, reverse=True)
+        if fin_list:
+            sorted_fin = sorted(fin_list, key=lambda f: f.fiscal_year, reverse=True)
             for f in sorted_fin:
                 if f.fiscal_year == 2024 and not fin_2024:
                     fin_2024 = f
@@ -68,9 +82,23 @@ class SampleDocumentGenerator:
                 fin_2023 = sorted_fin[1]
 
         # Inspect dynamic ESG data if available
+        esg_list = []
+        if hasattr(company, "esg_records") and company.esg_records:
+            esg_list = list(company.esg_records)
+        elif hasattr(company, "esg_data") and company.esg_data:
+            esg_list = list(company.esg_data)
+        elif hasattr(company, "id") and company.id:
+            try:
+                from backend.app.database import SessionLocal
+                from backend.app.models.schema_models import ESGData
+                with SessionLocal() as session:
+                    esg_list = session.query(ESGData).filter(ESGData.company_id == company.id).all()
+            except Exception:
+                esg_list = []
+
         esg_rec = None
-        if hasattr(company, "esg_data") and company.esg_data:
-            sorted_esg = sorted(company.esg_data, key=lambda e: e.fiscal_year, reverse=True)
+        if esg_list:
+            sorted_esg = sorted(esg_list, key=lambda e: e.fiscal_year, reverse=True)
             if sorted_esg:
                 esg_rec = sorted_esg[0]
 
