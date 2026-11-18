@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str | None = os.getenv("OPENAI_API_KEY", None)
     GROQ_API_KEY: str | None = os.getenv("GROQ_API_KEY", None)
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    LLM_MODEL_NAME: str = os.getenv("LLM_MODEL_NAME", "gemini-1.5-flash")
+    LLM_MODEL_NAME: str = os.getenv("LLM_MODEL_NAME", "gemini-flash-lite-latest")
     
     # Storage Paths
     UPLOAD_DIR: Path = BASE_DIR / "data" / "uploads"

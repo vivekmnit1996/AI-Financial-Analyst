@@ -18,7 +18,7 @@ export const SystemSettings: React.FC<SystemSettingsProps> = ({ onSettingsUpdate
   const [provider, setProvider] = useState<string>('deterministic');
   const [geminiKey, setGeminiKey] = useState<string>('');
   const [openaiKey, setOpenaiKey] = useState<string>('');
-  const [modelName, setModelName] = useState<string>('gemini-1.5-flash');
+  const [modelName, setModelName] = useState<string>('gemini-flash-lite-latest');
   const [statusMsg, setStatusMsg] = useState<string>('');
 
   useEffect(() => {
